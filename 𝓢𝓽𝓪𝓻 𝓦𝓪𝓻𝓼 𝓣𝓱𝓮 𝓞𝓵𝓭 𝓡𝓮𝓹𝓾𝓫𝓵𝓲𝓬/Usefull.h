@@ -1,4 +1,5 @@
-#pragma once
+#pragma 
+
 #include <cstddef>
 #include <TlHelp32.h>
 #include <handleapi.h>
@@ -7,9 +8,6 @@
 #include <vector>
 #include <processthreadsapi.h>
 #include <Windows.h>
-using std::cout;
-using std::endl;
-using std::string;
 
 struct module
 {
@@ -24,23 +22,21 @@ inline HANDLE GetProcess(const wchar_t* processName)
 	HANDLE handle;
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(entry);
-	if (!(entry.dwSize == 0)) {
+	if ((entry.dwSize < 3000 && entry.dwSize > 100)) {
 
-	do {
-
-		if (!_wcsicmp(entry.szExeFile, processName)) {
+		if (_wcsicmp(entry.szExeFile, processName)) {
 			TargetId = entry.th32ProcessID;
-			CloseHandle(handle);
-			TargetProcess = OpenProcess(PROCESS_ALL_ACCESS, false, TargetId);
-			return TargetProcess;
-		    }
+			/** Opens Process! */
+			TargetProcess = OpenProcess(PROCESS_ALL_ACCESS, true, TargetId);
+			return handle;
+		}
 
 	        return nullptr;
 		}
 	   
 	   while(entry.dwSize == entry.cntThreads);
-	}
 }
+
 
 inline module GetModule(const wchar_t* moduleName) {
 	HANDLE hmodule;
